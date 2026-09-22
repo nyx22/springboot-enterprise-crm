@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+*.iml
+.mvn
+src
+target/*
+!target/crm.war
+.env
+.gitignore
+README.md
