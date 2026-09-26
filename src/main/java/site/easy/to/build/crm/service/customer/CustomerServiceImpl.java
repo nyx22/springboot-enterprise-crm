@@ -7,6 +7,8 @@ import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
 import java.util.List;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -38,16 +40,28 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @CacheEvict(
+            value = "recentCustomers",
+            key = "#customer.user.id + ':10'"
+    )
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
     }
 
     @Override
+    @CacheEvict(
+            value = "recentCustomers",
+            key = "#customer.user.id + ':10'"
+    )
     public void delete(Customer customer) {
         customerRepository.delete(customer);
     }
 
     @Override
+    @Cacheable(
+            value = "recentCustomers",
+            key = "#userId + ':' + #limit"
+    )
     public List<Customer> getRecentCustomers(int userId, int limit) {
         Pageable pageable = PageRequest.of(0, limit);
         return customerRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
