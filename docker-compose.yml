@@ -18,6 +18,12 @@ services:
       timeout: 5s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    container_name: crm-redis
+    ports:
+      - "6379:6379"
+
   app:
     build: .
     container_name: crm-app
@@ -28,6 +34,8 @@ services:
       DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
       SQL_NAME: ${MYSQL_USER}
       SQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "8081:8080"
 
